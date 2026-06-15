@@ -1,5 +1,7 @@
 # Intel NUC 8i7BEH (Bean Canyon) macOS Tahoe 26.5.1 Hackintosh
 
+English | [简体中文](README-zh_CN.md)
+
 This project is based on OpenCore 1.0.8 and perfectly supports running **macOS Tahoe (26.5.1)** on an **Intel NUC 8i7BEH** mini-PC.
 
 This configuration references and pays homage to the classic project [Nucintosh](https://github.com/zearp/Nucintosh), and has been deeply adapted and optimized for macOS Tahoe (26.x) systems, removing the native sound card driver (`AppleHDA`) and requiring the wireless network card to connect via `itlwm + HeliPort`.
