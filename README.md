@@ -104,3 +104,6 @@ Currently, for troubleshooting purposes, the `-v` parameter (code-based boot ani
 ## 🤝 Acknowledgements
 
 - [Acidanthera](https://github.com/acidanthera) provided the OpenCore bootloader and various core Kexts.
+- NUC8 basic boot logic provided by [zearp/Nucintosh](https://github.com/zearp/Nucintosh).
+- `itlwm` and `HeliPort` provided by the [OpenIntelWireless](https://github.com/OpenIntelWireless) team.
+- Cross-platform driver support for modern macOS provided by the [laobamac/OCLP-Mod](https://github.com/laobamac/OCLP-Mod) team.
