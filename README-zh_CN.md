@@ -1,5 +1,7 @@
 # Intel NUC 8i7BEH (Bean Canyon) macOS Tahoe 26.5.1 Hackintosh
 
+[English](README.md) | 简体中文
+
 本项目基于 OpenCore 1.0.8 引导，完美支持在 **Intel NUC 8i7BEH** 迷你主机上运行 **macOS Tahoe (26.5.1)**。 
 
 本配置参考并致敬了经典项目 [Nucintosh](https://github.com/zearp/Nucintosh)，并针对 macOS Tahoe (26.x) 系统移除了原生声卡驱动（`AppleHDA`）以及无线网卡需要通过 `itlwm + HeliPort` 连接等新特性进行了深度的适配与调优。
