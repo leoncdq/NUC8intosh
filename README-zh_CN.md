@@ -78,3 +78,6 @@
 
 ## 🤝 致谢
 - [Acidanthera](https://github.com/acidanthera) 提供的 OpenCore 引导及各类核心 Kext。
+- [zearp/Nucintosh](https://github.com/zearp/Nucintosh) 提供的 NUC8 基础引导逻辑。
+- [OpenIntelWireless](https://github.com/OpenIntelWireless) 团队提供的 `itlwm` 与 `HeliPort`。
+- [laobamac/OCLP-Mod](https://github.com/laobamac/OCLP-Mod) 团队为现代 macOS 提供的越级驱动支持。
