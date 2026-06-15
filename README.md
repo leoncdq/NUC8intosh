@@ -1,81 +1,113 @@
 # Intel NUC 8i7BEH (Bean Canyon) macOS Tahoe 26.5.1 Hackintosh
 
-本项目基于 OpenCore 1.0.8 引导，完美支持在 **Intel NUC 8i7BEH** 迷你主机上运行 **macOS Tahoe (26.5.1)**。 
+This project is based on OpenCore 1.0.8 and perfectly supports running **macOS Tahoe (26.5.1)** on an **Intel NUC 8i7BEH** mini-PC.
 
-本配置参考并致敬了经典项目 [Nucintosh](https://github.com/zearp/Nucintosh)，并针对 macOS Tahoe (26.x) 系统移除了原生声卡驱动（`AppleHDA`）以及无线网卡需要通过 `itlwm + HeliPort` 连接等新特性进行了深度的适配与调优。
+This configuration references and pays homage to the classic project [Nucintosh](https://github.com/zearp/Nucintosh), and has been deeply adapted and optimized for macOS Tahoe (26.x) systems, removing the native sound card driver (`AppleHDA`) and requiring the wireless network card to connect via `itlwm + HeliPort`.
 
 ---
 
-## 💻 硬件配置与支持状态
+## 💻 Hardware Configuration and Support Status
 
-| 硬件组件 | 型号 | 驱动方式 | 状态 |
+| Hardware Components | Model | Driver Type | Status |
+
 | :--- | :--- | :--- | :--- |
-| **处理器 (CPU)** | Intel Core i7-8559U | 原生电源管理 (`CPUFriend.kext`) |  完美变频 |
-| **显卡 (iGPU)** | Intel Iris Plus Graphics 655 | `WhateverGreen.kext` (ID: `0x3EA50004`) |  图形加速 |
-| **有线网卡** | Intel i219-V Gigabit Ethernet | `IntelMausi.kext` |  正常 |
-| **无线网卡** | Intel Wireless-AC 9560 | `itlwm.kext` + HeliPort 客户端 |  正常 |
-| **蓝牙 (BT)** | Intel Wireless Bluetooth | `IntelBluetoothFirmware` + `BlueToolFixup` |  正常 |
-| **声卡 (Audio)** | Realtek ALC235 | OCLP-Mod (补回 AppleHDA) + `AppleALC` (ID: 3) |  正常 |
-| **读卡器** | RTS522A PCI Express Card Reader | `RealtekCardReader.kext` |  正常 |
-| **雷电/Type-C** | 内建 Thunderbolt 3 | ACPI 补丁适配 |  正常 |
+
+| **Processor (CPU)** | Intel Core i7-8559U | Native Power Management (`CPUFriend.kext`) | Perfect Frequency Variables |
+
+| **Graphics Card (iGPU)** | Intel Iris Plus Graphics 655 | `WhateverGreen.kext` (ID: `0x3EA50004`) | Graphics Acceleration |
+
+| **Wired Network Adapter** | Intel i219-V Gigabit Ethernet | `IntelMausi.kext` | Normal |
+
+| **Wireless Network Adapter** | Intel Wireless-AC 9560 | `itlwm.kext` + HeliPort Client | Normal |
+
+| **Bluetooth (BT)** | Intel Wireless Bluetooth | `IntelBluetoothFirmware` + `BlueToolFixup` | Normal |
+
+| **Sound Card (Audio)** | Realtek ALC235 | OCLP-Mod (Restores AppleHDA) + `AppleALC` (ID: 3) | Normal |
+
+| **Card Reader** | RTS522A PCI Express Card Reader | `RealtekCardReader.kext` | Normal |
+
+| **Thunderbolt/Type-C** | Built-in Thunderbolt 3 | ACPI Patch Compatibility | Normal |
 
 ---
 
-## 🛠️ macOS Tahoe 特殊配置说明 (必读)
+## 🛠️ macOS Tahoe Special Configuration Notes (Must Read)
 
-从 macOS Tahoe (26.x) 开始，苹果删除了老旧 Mac 所使用的 `AppleHDA.kext` 驱动。为了使内置声卡与无线网卡驱动在 Tahoe 上完美运行，本项目在 `config.plist` 中做了以下关键的安全降级配置：
+Starting with macOS Tahoe (26.x), Apple removed the `AppleHDA.kext` driver used by older Macs. To ensure the built-in sound card and wireless network card drivers function perfectly on Tahoe, this project implemented the following critical security downgrade configurations in `config.plist`:
 
-1. **禁用安全启动**：`SecureBootModel` 被设为 **`Disabled`**。
-   * *原因：这是使用 OCLP-Mod 写入驱动（Root Patch）且能正常开机引导的前提。若开启 `x86legacy` 会导致重启直接崩溃进入恢复模式。*
-2. **放宽系统沙盒与签名**：`boot-args` 中加入了 **`amfi=0x80`**。
-   * *原因：运行未签名的网卡和声卡补丁驱动所必需。*
-3. **绕过升级与硬件检测限制**：使用了 `RestrictEvents.kext` 并配置了启动参数 **`revpatch=sb`**。
-   * *原因：在 `SecureBootModel` 禁用的状态下，伪装安全启动，使系统能正常接收官方小版本增量更新 (OTA) 推送。*
+1. **Disable Secure Boot:** `SecureBootModel` is set to **Disabled**.
 
----
+* *Reason:** This is a prerequisite for using OCLP-Mod to write the driver (Root Patch) and for normal booting. Enabling `x86legacy` will cause a crash upon reboot, entering recovery mode.
 
-## 🚀 安装与配置指引
+2. **Relax System Sandbox and Signing:** `amfi=0x80` has been added to `boot-args`.
 
-### 第一步：准备 EFI 与生成三码
-1. 将本项目整个 `EFI` 文件夹拷贝至您的启动盘 EFI 分区中。
-2. 使用 `GenSMBIOS` 或者是 `OCAuxiliaryTools` 生成适用于 **`iMac20,2`**（或 `Macmini8,1`）的机型三码（MLB, SystemSerialNumber, SystemUUID）。
-3. 用文本编辑器或配置工具打开 [config.plist](file:///Volumes/OC/EFI/OC/config.plist)，将其填入 `PlatformInfo -> Generic` 下对应的位置。
+* *Reason:** Required for running unsigned network card and sound card patch drivers.
 
-### 第二步：安装 macOS Tahoe 26.5.1
-1. 按照标准的黑苹果安装步骤通过 USB 启动盘安装系统。
-2. 首次进入系统后，您会发现此时**没有声音**，且**无法直接连接 WiFi**，这是正常现象，请继续下一步。
+3. **Bypass Upgrade and Hardware Detection Restrictions:** `RestrictEvents.kext` is used, and the boot parameter `revpatch=sb` is configured.
 
-### 第三步：运行 OCLP-Mod 补回声卡与蓝牙驱动 (关键)
-为了带回被苹果删除的 `AppleHDA` 并使声卡正常工作：
-1. 下载并打开 [OCLP-Mod (OpenCore Legacy Patcher Mod)](https://github.com/laobamac/OCLP-Mod) 软件。
-2. 点击 **Post-Install Root Patch** 按钮。
-3. 点击 **Start Root Patching**，并输入您的开机密码。软件会自动为您补回声卡及其他外设的系统层驱动。
-4. **重启电脑**。在进入 OpenCore 引导选单时，**必须执行一次 Reset NVRAM**（以加载新的内核安全变量），随后正常进入系统。
-5. 此时打开 **系统设置 -> 声音**，声卡已完美工作！
-
-### 第四步：使用 HeliPort 连接 WiFi
-由于 `itlwm.kext` 将无线网卡模拟为了以太网接口，需要客户端连接：
-1. 下载最新版的 **[HeliPort 客户端](https://github.com/OpenIntelWireless/HeliPort/releases)** (DMG格式)。
-2. 将 **HeliPort.app** 拖入系统的 **应用程序** 文件夹并打开。
-3. 您将在屏幕右上角看到 WiFi 图标。点击它，选择您的 WiFi 并输入密码连接。
-4. 建议在 HeliPort 菜单中勾选 **“Launch at Login”**（开机启动），使其实现开机自动连接。
+* *Reason: To fake a secure boot when `SecureBootModel` is disabled, allowing the system to receive official minor version incremental updates (OTA) push notifications.*
 
 ---
 
-## ⚙️ 个性化调优 (可选)
+## 🚀 Installation and Configuration Guide
 
-### 1. 关于本机中的 CPU 正确显示
-当前配置中包含了 `revcpu=1` 和 `revcpuname=Intel\ Core\ i7-8559U` 参数。
-- 它会让“关于本机”界面正确将您的处理器识别为 `Intel Core i7-8559U`（而非“未知”）。您可以根据实际的 CPU 型号自行在 `boot-args` 中修改 `revcpuname` 的值。
+### Step 1: Preparing EFI and Generating the Model Code
 
-### 2. 去除啰嗦模式（纯净开机）
-目前为了排错，默认启用了 `-v` 参数（代码跑马灯开机）。如果您希望享受白苹果开机画面：
-- 编辑 `config.plist` 中的 `boot-args`，删去 **`-v`** 即可。
+1. Copy the entire `EFI` folder of this project to the EFI partition of your boot disk.
+
+2. Use `GenSMBIOS` or `OCAuxiliaryTools` to generate the model code (MLB, SystemSerialNumber, SystemUUID) suitable for **`iMac20,2`** (or `Macmini8,1`).
+
+3. Open [config.plist](file:///Volumes/OC/EFI/OC/config.plist) with a text editor or configuration tool, and fill in the corresponding locations under `PlatformInfo -> Generic`.
+
+### Step Two: Install macOS Tahoe 26.5.1
+
+1. Follow the standard Hackintosh installation steps to install the system via USB boot disk.
+
+2. Upon first entering the system, you will find that **there is no sound** and **you cannot directly connect to WiFi**. This is normal; please continue to the next step.
+
+### Step Three: Run OCLP-Mod to Restore Sound Card and Bluetooth Drivers (Crucial)
+
+To restore the `AppleHDA` removed by Apple and make the sound card work properly:
+
+1. Download and open the [OCLP-Mod (OpenCore Legacy Patcher Mod)](https://github.com/laobamac/OCLP-Mod) software.
+
+2. Click the **Post-Install Root Patch** button.
+
+3. Click **Start Root Patching** and enter your login password. The software will automatically restore the system-level drivers for your sound card and other peripherals.
+
+4. **Restart your computer**. Upon entering the OpenCore boot menu, **a Reset NVRAM must be performed once** (to load new kernel security variables), after which the system will boot normally.
+
+5. Now open **System Settings -> Sound**, and the sound card should be working perfectly!
+
+### Step Four: Connecting to WiFi using HeliPort
+
+Since `itlwm.kext` emulates the wireless network card as an Ethernet interface, a client connection is required:
+
+1. Download the latest version of the **[HeliPort client](https://github.com/OpenIntelWireless/HeliPort/releases)** (DMG format).
+
+2. Drag **HeliPort.app** into the system's **Applications** folder and open it.
+
+3. You will see a WiFi icon in the upper right corner of the screen. Click it, select your WiFi network, and enter the password to connect.
+
+4. It is recommended to check **"Launch at Login"** in the HeliPort menu to enable automatic connection at boot.
 
 ---
 
-## 🤝 致谢
-- [Acidanthera](https://github.com/acidanthera) 提供的 OpenCore 引导及各类核心 Kext。
-- [zearp/Nucintosh](https://github.com/zearp/Nucintosh) 提供的 NUC8 基础引导逻辑。
-- [OpenIntelWireless](https://github.com/OpenIntelWireless) 团队提供的 `itlwm` 与 `HeliPort`。
-- [laobamac/OCLP-Mod](https://github.com/laobamac/OCLP-Mod) 团队为现代 macOS 提供的越级驱动支持。
+## ⚙️ Personalized Tuning (Optional)
+
+### 1. Correct CPU Display in About This Machine
+
+The current configuration includes the parameters `revcpu=1` and `revcpuname=Intel\Core\i7-8559U`.
+
+- This ensures the About This Machine interface correctly identifies your processor as `Intel Core i7-8559U` (instead of "Unknown"). You can modify the value of `revcpuname` in `boot-args` according to your actual CPU model.
+
+### 2. Remove Verbose Mode (Clean Boot)
+
+Currently, for troubleshooting purposes, the `-v` parameter (code-based boot animation) is enabled by default. If you want to enjoy the white Apple logo boot screen:
+
+- Edit `config.plist` and remove **`-v`** from `boot-args`.
+
+---
+
+## 🤝 Acknowledgements
+
+- [Acidanthera](https://github.com/acidanthera) provided the OpenCore bootloader and various core Kexts.
