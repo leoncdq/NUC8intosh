@@ -51,13 +51,13 @@ Starting with macOS Tahoe (26.x), Apple removed the `AppleHDA.kext` driver used 
 
 3. Open [config.plist](file:///Volumes/OC/EFI/OC/config.plist) with a text editor or configuration tool, and fill in the corresponding locations under `PlatformInfo -> Generic`.
 
-### Step Two: Install macOS Tahoe 26.5.1
+### Step 2: Install macOS Tahoe 26.5.1
 
 1. Follow the standard Hackintosh installation steps to install the system via USB boot disk.
 
 2. Upon first entering the system, you will find that **there is no sound** and **you cannot directly connect to WiFi**. This is normal; please continue to the next step.
 
-### Step Three: Run OCLP-Mod to Restore Sound Card and Bluetooth Drivers (Crucial)
+### Step 3: Run OCLP-Mod to Restore Sound Card and Bluetooth Drivers (Crucial)
 
 To restore the `AppleHDA` removed by Apple and make the sound card work properly:
 
@@ -71,7 +71,7 @@ To restore the `AppleHDA` removed by Apple and make the sound card work properly
 
 5. Now open **System Settings -> Sound**, and the sound card should be working perfectly!
 
-### Step Four: Connecting to WiFi using HeliPort
+### Step 4: Connecting to WiFi using HeliPort
 
 Since `itlwm.kext` emulates the wireless network card as an Ethernet interface, a client connection is required:
 
