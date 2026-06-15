@@ -11,23 +11,14 @@ This configuration references and pays homage to the classic project [Nucintosh]
 ## 💻 Hardware Configuration and Support Status
 
 | Hardware Components | Model | Driver Type | Status |
-
 | :--- | :--- | :--- | :--- |
-
 | **Processor (CPU)** | Intel Core i7-8559U | Native Power Management (`CPUFriend.kext`) | Perfect Frequency Variables |
-
 | **Graphics Card (iGPU)** | Intel Iris Plus Graphics 655 | `WhateverGreen.kext` (ID: `0x3EA50004`) | Graphics Acceleration |
-
 | **Wired Network Adapter** | Intel i219-V Gigabit Ethernet | `IntelMausi.kext` | Normal |
-
 | **Wireless Network Adapter** | Intel Wireless-AC 9560 | `itlwm.kext` + HeliPort Client | Normal |
-
 | **Bluetooth (BT)** | Intel Wireless Bluetooth | `IntelBluetoothFirmware` + `BlueToolFixup` | Normal |
-
 | **Sound Card (Audio)** | Realtek ALC235 | OCLP-Mod (Restores AppleHDA) + `AppleALC` (ID: 3) | Normal |
-
 | **Card Reader** | RTS522A PCI Express Card Reader | `RealtekCardReader.kext` | Normal |
-
 | **Thunderbolt/Type-C** | Built-in Thunderbolt 3 | ACPI Patch Compatibility | Normal |
 
 ---
